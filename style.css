@@ -1,0 +1,263 @@
+/* --- Color Variables --- */
+:root {
+    --lemon-meringue: #FFEBAE;
+    --periwinkle: #A7B5FE;
+    --columbia: #D4E0F0;
+    --sea-breeze: #7CB8C0;
+    --honey: #FEB737;
+    --light-indigo: #543787;
+    --dark-indigo: #3c2759;
+}
+
+/* --- General Reset & Font --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Body & Layout --- */
+body {
+    background: linear-gradient(135deg, var(--periwinkle), var(--columbia));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: var(--light-indigo);
+}
+
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Navbar --- */
+/* --- Navbar --- */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+}
+
+.navbar .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.5rem;
+}
+
+.navbar .navbar-logo {
+    flex-shrink: 0;
+}
+
+.navbar .navbar-links {
+    display: flex;
+    gap: 2rem;
+    flex-shrink: 0;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: var(--light-indigo);
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: var(--dark-indigo);
+}
+/* --- Hero & Card Styles --- */
+.hero-card {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 40rem;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--dark-indigo);
+    margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 400;
+    color: var(--light-indigo);
+    margin-bottom: 2rem;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-quiz {
+    background-color: var(--light-indigo);
+    color: white;
+}
+
+.btn-camera {
+    background-color: var(--honey);
+    color: white;
+}
+
+.btn-submit {
+    background-color: var(--honey);
+    color: white;
+}
+
+/* --- Quiz Form Styles --- */
+.mood-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.question-group {
+    text-align: left;
+}
+
+.question-label {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--dark-indigo);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--columbia);
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    color: var(--light-indigo);
+    font-weight: 500;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.radio-option span {
+    display: block;
+}
+
+.radio-input {
+    display: none;
+}
+
+/* Highlight selected option */
+.radio-input:checked + span {
+    background-color: var(--sea-breeze);
+    color: white;
+    transform: scale(1.05);
+}
+
+.submit-container {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* --- Results Box --- */
+.result-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--lemon-meringue);
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.result-text {
+    font-weight: 600;
+    color: var(--dark-indigo);
+}
+
+.inferred-mood {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--light-indigo);
+    margin-top: 0.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Camera & Video Page Styles --- */
+.camera-stream {
+    width: 100%;
+    max-width: 320px; /* Matches video tag */
+    border-radius: 1rem;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+#canvas {
+    display: none;
+}
+
+/* --- Optional: Buttons on Camera Page --- */
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-camera {
+    background-color: var(--honey);
+}
+
+.btn-camera:hover {
+    background-color: #e0a327;
+}
+
+.btn-quiz {
+    background-color: var(--light-indigo);
+}
+
+.btn-quiz:hover {
+    background-color: #3c2759;
+}

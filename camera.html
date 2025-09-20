@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+</head>
+<body class="min-h-screen flex flex-col gradient-bg font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar sticky top-0 z-50">
+        <div class="navbar-container">
+            <!-- Left: Text Logo -->
+            <div class="navbar-logo text-2xl font-extrabold text-dark-indigo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">Mood Inferencer</a>
+            </div>
+
+            <!-- Right: Nav links -->
+            <div class="navbar-links">
+                <a href="quiz.html" class="nav-link">Answer a Quiz</a>
+                <a href="camera.html" class="nav-link">Click a Picture</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="hero-card text-center">
+            <h1 class="hero-title">Mood Detection</h1>
+            <p class="hero-subtitle mb-8">Click the button to take a picture and find out your mood.</p>
+            
+            <!-- Camera Container -->
+            <div class="flex flex-col items-center gap-4">
+                <video id="video" width="320" height="240" autoplay class="camera-stream"></video>
+                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                <button onclick="captureImage()" class="btn btn-camera">📸 Capture & Detect Mood</button>
+            </div>
+            
+            <!-- Result Container -->
+            <div id="result-container" class="mt-6">
+                <p id="result" class="result-text"></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-6 text-center text-dark-indigo">
+        &copy; 2025 Mood Inferencer 🌿 All rights reserved.
+    </footer>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const result = document.getElementById('result');
+
+        // Start camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                result.innerText = "Error: Could not access camera.";
+                console.error("Camera access denied or not available.", err);
+            });
+
+        function captureImage() {
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append("image", blob, "capture.png");
+
+                fetch("http://127.0.0.1:5000/detect_mood", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    result.innerText = "Detected Mood: " + data.mood;
+                })
+                .catch(err => {
+                    result.innerText = "Error detecting mood 😢";
+                    console.error(err);
+                });
+            }, "image/png");
+        }
+    </script>
+</body>
+</html>

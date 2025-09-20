@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mood Inferencer - Home</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="min-h-screen flex flex-col gradient-bg font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar sticky top-0 z-50">
+        <div class="navbar-container">
+            <!-- Left: Text Logo -->
+            <div class="navbar-logo text-2xl font-extrabold text-dark-indigo">
+                Mood Inferencer
+            </div>
+
+            <!-- Right: Nav links -->
+            <div class="navbar-links">
+                <a href="quiz.html" class="nav-link">Answer a Quiz</a>
+                <a href="camera.html" class="nav-link">Click a Picture</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="hero-card">
+            <h1 class="hero-title">Welcome!</h1>
+            <p class="hero-subtitle">Choose how you want us to guess your mood today</p>
+
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="quiz.html" class="btn btn-quiz">Answer a Quiz</a>
+                <a href="camera.html" class="btn btn-camera">Click a Picture</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-6 text-center text-dark-indigo">
+        &copy; 2025 Mood Inferencer 🌿 All rights reserved.
+    </footer>
+</body>
+</html>

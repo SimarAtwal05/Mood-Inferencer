@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Inferencer (RuleML Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex flex-col gradient-bg font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar sticky top-0 z-50">
+        <div class="navbar-container">
+            <!-- Left: Text Logo -->
+            <div class="navbar-logo text-2xl font-extrabold text-dark-indigo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">Mood Inferencer</a>
+            </div>
+
+            <!-- Right: Nav links -->
+            <div class="navbar-links">
+                <a href="quiz.html" class="nav-link">Answer a Quiz</a>
+                <a href="camera.html" class="nav-link">Click a Picture</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="hero-card">
+            <h1 class="hero-title">Mood Check-in</h1>
+            <p class="hero-subtitle">Answer these questions to find out your mood.</p>
+
+            <form id="moodForm" class="mood-form">
+
+                <div class="question-group">
+                    <label class="question-label">1. How was your morning?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="q1" value="great" class="radio-input">
+                            <span>Great!</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q1" value="okay" class="radio-input">
+                            <span>It was okay.</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q1" value="rough" class="radio-input">
+                            <span>A bit rough.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">2. Current energy level?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="q2" value="high" class="radio-input">
+                            <span>High</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q2" value="medium" class="radio-input">
+                            <span>Medium</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q2" value="low" class="radio-input">
+                            <span>Low</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">3. Weather preference?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="q3" value="sunny" class="radio-input">
+                            <span>Sunny</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q3" value="cloudy" class="radio-input">
+                            <span>Cloudy</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="q3" value="rainy" class="radio-input">
+                            <span>Rainy</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="submit-container">
+                    <button type="submit" class="btn btn-submit">You're Feeling...</button>
+                </div>
+            </form>
+
+            <div id="resultContainer" class="result-box hidden">
+                <p class="result-text">Your mood is:</p>
+                <p id="inferredMood" class="inferred-mood"></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-6 text-center text-dark-indigo">
+        &copy; 2025 Mood Inferencer 🌿 All rights reserved.
+    </footer>
+
+    <!-- RuleML Scoring -->
+    <ruleml id="moodRules" style="display:none;">
+        <assert>
+            <imp>
+                <head><mood>Happy &amp; Energetic 😄</mood></head>
+                <body><score>3..∞</score></body>
+            </imp>
+            <imp>
+                <head><mood>Calm &amp; Content 😊</mood></head>
+                <body><score>0..2</score></body>
+            </imp>
+            <imp>
+                <head><mood>A Bit Mellow 😴</mood></head>
+                <body><score>-∞..-1</score></body>
+            </imp>
+        </assert>
+        <scoring>
+            <q1 great="2" okay="0" rough="-2"/>
+            <q2 high="2" medium="0" low="-2"/>
+            <q3 sunny="1" cloudy="0" rainy="-1"/>
+        </scoring>
+    </ruleml>
+
+    <script>
+        document.getElementById('moodForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const rules = document.querySelector('ruleml scoring');
+            const q1Map = rules.querySelector('q1');
+            const q2Map = rules.querySelector('q2');
+            const q3Map = rules.querySelector('q3');
+
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+
+            if (!q1 || !q2 || !q3) {
+                alert('Please answer all questions.');
+                return;
+            }
+
+            let score = parseInt(q1Map.getAttribute(q1.value)) +
+                        parseInt(q2Map.getAttribute(q2.value)) +
+                        parseInt(q3Map.getAttribute(q3.value));
+
+            let mood = '';
+            if (score >= 3) mood = "Happy & Energetic 😄";
+            else if (score >= 0) mood = "Calm & Content 😊";
+            else mood = "A Bit Mellow 😴";
+
+            document.getElementById('inferredMood').textContent = mood;
+            document.getElementById('resultContainer').classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>
