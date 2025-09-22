@@ -125,7 +125,10 @@ body {
     background-color: var(--honey);
     color: white;
 }
-
+.btn-write {
+    background-color: var(--sea-breeze);
+    color: white;
+}
 .btn-submit {
     background-color: var(--honey);
     color: white;
