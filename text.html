@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood from Text</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <style>
+        /* Simple style for the textarea */
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 2px solid var(--columbia);
+            font-size: 1rem;
+            color: var(--dark-indigo);
+            resize: vertical;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--sea-breeze);
+            box-shadow: 0 0 0 3px rgba(124, 184, 192, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col gradient-bg font-inter">
+
+    <nav class="navbar sticky top-0 z-50">
+        <div class="navbar-container">
+            <div class="navbar-logo text-2xl font-extrabold text-dark-indigo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">Mood Inferencer</a>
+            </div>
+            <div class="navbar-links">
+                <a href="quiz.html" class="nav-link">Answer a Quiz</a>
+                <a href="camera.html" class="nav-link">Click a Picture</a>
+                <a href="text.html" class="nav-link">Write it Down</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="hero-card">
+            <h1 class="hero-title">How Are You Feeling?</h1>
+            <p class="hero-subtitle">Write a few sentences about your day or current thoughts.</p>
+            
+            <form id="textForm">
+                <textarea id="textInput" placeholder="Today was an interesting day..."></textarea>
+                <button type="submit" class="btn btn-submit">Analyze My Mood</button>
+            </form>
+
+            <div id="resultContainer" class="result-box hidden mt-6">
+                <p class="result-text">Your text suggests your mood is:</p>
+                <p id="inferredMood" class="inferred-mood"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-6 text-center text-dark-indigo">
+        &copy; 2025 Mood Inferencer 🌿 All rights reserved.
+    </footer>
+
+    <script>
+        document.getElementById('textForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+
+            const text = document.getElementById('textInput').value;
+            const resultText = document.getElementById('inferredMood');
+            const resultContainer = document.getElementById('resultContainer');
+            
+            if (text.trim() === "") {
+                alert("Please write something first!");
+                return;
+            }
+
+            // Show a loading message
+            resultText.textContent = 'Analyzing...';
+            resultContainer.classList.remove('hidden');
+
+            // Send the text to the Flask backend
+            fetch("http://127.0.0.1:5000/analyze_text", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mood) {
+                    resultText.textContent = data.mood;
+                } else {
+                    resultText.textContent = 'Could not determine mood.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultText.textContent = 'Error analyzing text 😢';
+            });
+        });
+    </script>
+</body>
+</html>
