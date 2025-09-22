@@ -31,6 +31,15 @@ This is where the AI comes out to play\!
 3.  The backend, our mission control, uses `DeepFace` and `OpenCV` to process the image and find your dominant emotion (like "happy", "sad", or "neutral").
 4.  *Boom\!* The detected mood is sent right back to your browser and displayed on your screen.
 
+### 3\. The Word Weaver Method (`text.html`)
+This is for when you'd rather write it out.
+
+1.  You type a few sentences about your day or how you're feeling into the text area.
+2.  Click the "Analyze My Mood" button. Your text is sent to a dedicated endpoint on our Flask backend.
+3.  The backend uses the TextBlob library to perform sentiment analysis, calculating a "polarity" score for your text.
+4.  Based on whether the score is positive, negative, or neutral, your mood is inferred and sent back to be displayed on your screen.
+
+
 -----
 
 ## 🛠️ Tech Stack
@@ -48,6 +57,7 @@ This project is a blend of cool frontend and powerful backend technologies.
   * **Python**
   * **Flask:** Our lightweight and speedy web server.
   * **DeepFace:** The star of the show for all facial analysis.
+  * **TextBlob:** For simple and effective sentiment analysis of your written thoughts.
   * **OpenCV:** Helps us handle and process the images from your camera.
   * **Flask-CORS:** Lets our frontend and backend talk to each other without any drama.
 
@@ -60,10 +70,11 @@ Here's a map of the project so you know your way around:
 ```
 /
 ├── 🏠 index.html      # The main landing page
-├── 📝 quiz.html       # The quiz and its logic
-├── 📸 camera.html     # The camera and its logic
+├── 📝 quiz.html        # The quiz and its logic
+├── 📸 camera.html      # The camera and its logic
+├── ✍️ text.html        # The text analysis page and its logic
 ├── 🎨 style.css       # The one stylesheet to rule them all
-└── 🧠 app.py          # Our Python backend server
+└── 🧠 app.py         # Our Python backend server
 ```
 
 -----
