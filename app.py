@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from deepface import DeepFace
+from textblob import TextBlob # Import TextBlob
 import cv2
 import numpy as np
 
@@ -9,7 +10,32 @@ app = Flask(__name__)
 # Enable CORS to allow requests from the HTML file running in a browser
 CORS(app)
 
-# Define the route that will handle image uploads and mood detection
+# --- NEW: Text Analysis Route ---
+@app.route("/analyze_text", methods=["POST"])
+def analyze_text():
+    # Get the text from the incoming JSON request
+    text_data = request.get_json()
+    if not text_data or 'text' not in text_data:
+        return jsonify({"error": "No text provided"}), 400
+
+    text = text_data['text']
+    
+    # Create a TextBlob object
+    blob = TextBlob(text)
+    
+    # Get the polarity score (-1.0 to 1.0)
+    polarity = blob.sentiment.polarity
+    
+    # Determine mood based on polarity
+    mood = "Neutral 😐"
+    if polarity > 0.2:
+        mood = "Positive 😊"
+    elif polarity < -0.2:
+        mood = "Negative 😟"
+        
+    return jsonify({"mood": mood})
+
+# --- Existing: Mood Detection Route ---
 @app.route("/detect_mood", methods=["POST"])
 def detect_mood():
     # Check if a file named 'image' was sent in the request
@@ -25,24 +51,16 @@ def detect_mood():
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         # Use DeepFace to analyze the image for emotions
-        # We specify 'emotion' as the only action to analyze
-        analysis = DeepFace.analyze(img, actions=['emotion'])
+        analysis = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
         
-        # Check if DeepFace found any faces in the image
-        if analysis:
-            # The result is a list of dictionaries. We get the dominant emotion
-            # from the first face found.
-            dominant_emotion = analysis[0]['dominant_emotion']
-            # Return the detected mood as a JSON response
-            return jsonify({"mood": dominant_emotion})
-        else:
-            # No face was detected, return a user-friendly message
-            return jsonify({"mood": "No face detected 🤷"}), 404
+        # The result is a list of dictionaries for each face.
+        dominant_emotion = analysis[0]['dominant_emotion']
+        return jsonify({"mood": dominant_emotion})
 
     except Exception as e:
-        # If any other error occurs, print it to the console and return an error message
+        # This can happen if no face is detected, or another error occurs
         print(f"An error occurred: {e}")
-        return jsonify({"mood": "Error detecting mood 😢"}), 500
+        return jsonify({"mood": "Could not analyze image 🤷"}), 500
 
 # This block ensures the server runs only when the script is executed directly
 if __name__ == "__main__":
